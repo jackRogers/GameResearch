@@ -2,7 +2,7 @@ import math
 import random
 
 class character():
-  def __init__(self,unit_number,team):
+	def __init__(self,unit_number,team):
 		self.name = team + " " + str(unit_number)
 		self.team = team
 		self.level = 1.0
@@ -15,17 +15,16 @@ class character():
 		self.current_hp = 100.0
 		
 	def update_stats(self):
-		self.max_hp = 100.0 + 20.0/(self.level-1.0)
-		self.dexterity = 10.0*(5.0/(self.level-1.0))
-		self.strength = 10.0*(5.0/(self.level-1.0))
+		self.max_hp = 100.0 + 20.0*(self.level-1.0)
+		self.dexterity = 10.0+(5.0*(self.level-1.0))
+		self.strength = 10.0+(5.0*(self.level-1.0))
 		
 	def update_level(self):
-		if self.xp >= 1.5**self.level:
-			self.xp -= 1.5**self.level
+		if self.xp >= 5**self.level:
+			self.xp -= 5**self.level
 			self.level += 1
 			self.update_stats()
-			#print "Character ",self.name," has reached level ",self.level
-			
+			#print "Character ",self.name," has reached level ",self.level		
 	def heal_to_full(self):
 		self.current_hp = self.max_hp
 		
@@ -41,6 +40,7 @@ class duel():
 		self.winner = None
 		
 	def one_tick(self):
+		#50% chance A attacks first
 		if random.random() >= 0.5:
 			a_hit_chance = (self.a.dexterity/self.b.dexterity)*self.a.dexterity
 			if a_hit_chance >= random.random():
@@ -133,17 +133,18 @@ class battle():
 	def print_stats(self):
 		print "\n team A roster"
 		print len(self.A), ' units total'
+		print 'Name\tlevel\tkills'
 		for i in self.A:
 			if i.kills > 0:
-				print i.name,i.level,i.kills
+				print i.name,'\t',i.level,'\t',i.kills
 			
 		print "\n team B roster"
 		print len(self.B), ' units total'
+		print 'Name\tlevel\tkills'
 		for i in self.B:
 			if i.kills > 0:
-				print i.name,i.level,i.kills
-		
-		
+				print i.name,'\t',i.level,'\t',i.kills
+				
 def main():
 	army_size_input = input("Enter size of both armies: ")
 	
@@ -189,9 +190,6 @@ def main():
 	print "Army B won ", B_wins, " times"
 	raw_input('Enter to see player stats')
 	current_battle.print_stats()
-		
-main()
-	
-	
-	
+	raw_input('Enter to quit')
 
+main()
