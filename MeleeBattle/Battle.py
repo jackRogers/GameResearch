@@ -5,7 +5,7 @@ import Duel
 import Interface
 import Data
 
-
+#
 class battle():
 	def __init__(self,A,B):
 		self.A_starting_units = len(A)
