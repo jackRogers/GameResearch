@@ -13,7 +13,7 @@ def get_param(prompt_string):
 	input = screen.getstr(10, 10, 60)
 	return input
 
-def main_menu():
+def main():
 	x = 0
 	while x != ord('6'):
 		screen = curses.initscr()
