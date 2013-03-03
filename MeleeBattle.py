@@ -24,7 +24,8 @@ class character():
 			self.xp -= 5**self.level
 			self.level += 1
 			self.update_stats()
-			#print "Character ",self.name," has reached level ",self.level		
+			#print "Character ",self.name," has reached level ",self.level
+			
 	def heal_to_full(self):
 		self.current_hp = self.max_hp
 		
