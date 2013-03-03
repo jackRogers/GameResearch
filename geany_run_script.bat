@@ -1,4 +1,4 @@
-C:\Python27\python "Interface.py"
+C:\Python27\python "MeleeBattle.py"
 
 pause
 del "%0"
