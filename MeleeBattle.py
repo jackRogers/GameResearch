@@ -15,13 +15,13 @@ class character():
 		self.current_hp = 100.0
 		
 	def update_stats(self):
-		self.max_hp = 100.0 + 20.0*(self.level-1.0)
-		self.dexterity = 10.0+(5.0*(self.level-1.0))
-		self.strength = 10.0+(5.0*(self.level-1.0))
+		self.max_hp = 100.0 + 10.0*(self.level-1.0)
+		self.dexterity = 10.0+(1.0*(self.level-1.0))
+		self.strength = 10.0+(1.0*(self.level-1.0))
 		
 	def update_level(self):
-		if self.xp >= 5**self.level:
-			self.xp -= 5**self.level
+		if self.xp >= 2**self.level:
+			self.xp -= 2**self.level
 			self.level += 1
 			self.update_stats()
 			#print "Character ",self.name," has reached level ",self.level
