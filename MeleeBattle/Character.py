@@ -1,5 +1,11 @@
 import math
 import random
+import Duel
+import Battle
+import Data
+import Interface
+
+
 
 class character():
 	def __init__(self,unit_number,team):

@@ -1,5 +1,10 @@
 import math
 import random
+import Character
+import Battle
+import Data
+import Interface
+
 
 class duel():
 	def __init__(self,A,B):
