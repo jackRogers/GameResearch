@@ -42,7 +42,7 @@ class battle():
 			
 			a = random.randint(0,len(self.A)-1)
 			b = random.randint(0,len(self.B)-1)
-			self.duels.append(duel(self.A.pop(a),self.B.pop(b)))	
+			self.duels.append(Duel.duel(self.A.pop(a),self.B.pop(b)))	
 			duels_to_make -= 1	
 		
 	def all_duels_one_tick(self):

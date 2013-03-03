@@ -5,7 +5,11 @@ import Character
 import Data
 import Battle
 
-def get_param(prompt_string):
+class interface():
+	def __init__(self):
+		self.main_menu()
+
+def get_param(self,prompt_string):
 	screen.clear()
 	screen.border(0)
 	screen.addstr(2, 2, prompt_string)
@@ -13,7 +17,10 @@ def get_param(prompt_string):
 	input = screen.getstr(10, 10, 60)
 	return input
 
-def main_menu():
+def army_A_constructor(self):
+	army_A_initial_recruit_count = get_param("Enter number of units to initialize army A")
+
+def main_menu(self):
 	x = 0
 	while x != ord('6'):
 		screen = curses.initscr()
@@ -31,7 +38,8 @@ def main_menu():
 		if x == ord('1'):
 			screen.clear()
 			screen.border(0)
-			army_A_initial_recruit_count = get_param("Enter number of units to initialize army A")
+			self.army_A_constructor()
+			self.main_menu()
 		if x == ord('2'):
 			pass
 		if x == ord('3'):
@@ -40,6 +48,4 @@ def main_menu():
 			pass
 		if x == ord('5'):
 			pass
-
-curses.endwin()
 
