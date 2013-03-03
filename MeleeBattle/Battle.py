@@ -5,7 +5,6 @@ import Duel
 import Interface
 import Data
 
-#
 class battle():
 	def __init__(self,A,B):
 		self.A_starting_units = len(A)
@@ -35,8 +34,7 @@ class battle():
 			
 		#print winner and losses and such
 		self.print_winner()
-
-##
+		
 	def assign_max_duels(self):
 		self.max_duels = min(len(self.A),len(self.B))
 		duels_to_make = self.max_duels
