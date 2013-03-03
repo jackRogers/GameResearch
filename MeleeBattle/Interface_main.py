@@ -5,7 +5,9 @@ import Character
 import Data
 import Battle
 
-def get_param(prompt_string):
+data = Data.data()
+
+def get_param(screen,prompt_string):
 	screen.clear()
 	screen.border(0)
 	screen.addstr(2, 2, prompt_string)
@@ -13,7 +15,18 @@ def get_param(prompt_string):
 	input = screen.getstr(10, 10, 60)
 	return input
 
-def main():
+def army_A_constructor(screen):
+	army_A_initial_recruit_count = get_param(screen,"Enter number of units to initialize army A")
+	data.Army_A = [Character.character(i,'a') for i in range(int(army_A_initial_recruit_count))]
+	data.Army_A_max_size = len(data.Army_A)
+	
+def army_B_constructor(screen):
+	army_B_initial_recruit_count = get_param(screen,"Enter number of units to initialize army B")
+	data.Army_B = [Character.character(i,'b') for i in range(int(army_B_initial_recruit_count))]
+	data.Army_B_max_size = len(data.Army_B)
+
+
+def main_menu():
 	x = 0
 	while x != ord('6'):
 		screen = curses.initscr()
@@ -31,15 +44,43 @@ def main():
 		if x == ord('1'):
 			screen.clear()
 			screen.border(0)
-			army_A_initial_recruit_count = get_param("Enter number of units to initialize army A")
+			army_A_constructor(screen)
+			main_menu()
 		if x == ord('2'):
-			pass
+			screen.clear()
+			screen.border(0)
+			army_B_constructor(screen)
+			main_menu()
 		if x == ord('3'):
-			pass
+			number_of_battles_input = get_param(screen,"Enter number of units to initialize army B")
+			for i in range(int(number_of_battles_input)):
+				print "\nBattle ",i," has begun"
+				current_battle = Battle.battle(data.Army_A,data.Army_B)	
+				data.Army_A = current_battle.A
+				data.Army_B = current_battle.B
+				if current_battle.winner == 'a':
+					data.A_wins += 1
+				else:
+					data.B_wins += 1
+				
+				#heal all surviving units
+				for i in data.Army_A:
+					i.heal_to_full()
+				for i in data.Army_B:
+					i.heal_to_full()
+					
+				#replace dead units with level 1 units
+				while len(data.Army_A) < data.Army_A_max_size:
+					data.A_count += 1
+					data.Army_A.append(Character.character(data.A_count,'a'))
+				while len(data.Army_B) < data.Army_B_max_size:
+					data.B_count += 1
+					data.Army_B.append(Character.character(data.B_count,'b'))
 		if x == ord('4'):
 			pass
 		if x == ord('5'):
 			pass
 
+main_menu()
 curses.endwin()
 
