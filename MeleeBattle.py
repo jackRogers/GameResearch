@@ -85,7 +85,7 @@ class battle():
 		self.winner = None
 		
 		#while noone has lost
-		while len(self.A)>= self.A_starting_units/2.0 and len(self.B)>= self.B_starting_units/2.0:
+		while len(self.A)+len(self.duels)>= self.A_starting_units/2.0 and len(self.B)+len(self.duels)>= self.B_starting_units/2.0:
 			#assign max number of duels
 			self.assign_max_duels()
 			#advance each duel 1 tick
