@@ -77,10 +77,25 @@ def main_menu():
 					data.B_count += 1
 					data.Army_B.append(Character.character(data.B_count,'b'))
 		if x == ord('4'):
-			pass
+			print "\n team A roster"
+			print len(data.Army_A), ' units total'
+			print 'Name\tlevel\tkills'
+			for i in data.Army_A:
+				if i.kills > 0:
+					print i.name,'\t',i.level,'\t',i.kills
+			raw_input("press enter")
+			main_menu()
+			
 		if x == ord('5'):
-			pass
-
+			print "\n team B roster"
+			print len(data.Army_B), ' units total'
+			print 'Name\tlevel\tkills'
+			for i in data.Army_B:
+				if i.kills > 0:
+					print i.name,'\t',i.level,'\t',i.kills
+			raw_input("press enter")
+			main_menu()
+			
 main_menu()
 curses.endwin()
 
