@@ -1,7 +1,3 @@
-
-#!/usr/bin/env python
-
-from os import system
 import curses
 
 def get_param(prompt_string):
@@ -27,17 +23,14 @@ while x != ord('4'):
      screen.refresh()
      x = screen.getch()
      if x == ord('1'):
-          username = get_param("Enter the username")
-          homedir = get_param("Enter the home directory, eg /home/nate")
-          groups = get_param("Enter comma-separated groups, eg adm,dialout,cdrom")
-          shell = get_param("Enter the shell, eg /bin/bash:")
-          curses.endwin()
-          execute_cmd("useradd -d " + homedir + " -g 1000 -G " + groups + " -m -s " + shell + " " + username)
+		 pass
      if x == ord('2'):
-          curses.endwin()
-          execute_cmd("apachectl restart")
+		 pass
      if x == ord('3'):
-          curses.endwin()
-          execute_cmd("df -h")
+		 pass
+	 if x == ord('4'):
+		 pass
+     if x == ord('5'):
+		 pass
 
 curses.endwin()
