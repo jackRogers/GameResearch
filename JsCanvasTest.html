@@ -116,8 +116,13 @@
 			for (var i = 0; i < numboats; i++) { 
 				boats[i] = new Boat(Math.floor((Math.random() * maxx) + 1),Math.floor((Math.random() * maxy) + 1));
 			}
-			for (var j = 1; j < boats.length; j++) {
+			for (var j = 0; j < boats.length; j++) {
+				if (j == 0){
+					boats[j].setdest(500,500)
+				} else {
+				
 				boats[j].setTarget(boats[j-1])
+				}
 				//var x = boats[j];
 				//var y = boats[j-1];
 				//x.setTarget(y);
