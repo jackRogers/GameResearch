@@ -36,6 +36,13 @@
 				ctx.stroke();
 			}
 			
+			this.updateTarget=function(){
+				if (this.target == null) {
+					lol=1 //do nothing
+				} else {
+					this.setdest(this.target.x,this.target.y)
+				}
+			}
 			
 			this.turn=function() {
 				if (this.xdest == null){ 
@@ -118,7 +125,7 @@
 					boats[i].acc()
 					boats[i].updateVel();
 					boats[i].draw(context);
-					boats[i].setTarget(boats[i-1])
+					boats[i].updateTarget();
 					
 					boats[i].turn();
 					boats[i].updatePos();
