@@ -42,6 +42,12 @@
 				} else {
 					this.setdest(this.target.x,this.target.y)
 				}
+				var c=document.getElementById("tutorial");
+				var ctx=c.getContext("2d");
+				ctx.beginPath();
+				ctx.moveTo(this.x,this.y);
+				ctx.lineTo(this.target.xdest,this.target.ydest);
+				ctx.stroke();
 			}
 			
 			this.turn=function() {
