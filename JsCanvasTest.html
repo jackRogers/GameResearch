@@ -4,7 +4,7 @@
 <script type="text/javascript">
 	
 	
-	
+	var boats = [];
 	window.onload=function () {
 		function Boat(xinit,yinit) {
 			this.x=xinit;
@@ -105,7 +105,7 @@
 			var maxx=1000
 			var maxy=1000
 			var numboats = 30
-			var boats = [];
+			
 			for (var i = 0; i < numboats; i++) { 
 				boats[i] = new Boat(Math.floor((Math.random() * maxx) + 1),Math.floor((Math.random() * maxy) + 1));
 			}
