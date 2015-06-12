@@ -31,7 +31,7 @@ function Boat(xinit,yinit,color) {
 	this.xdest = null;
 	this.ydest = null;
 	this.speed=20;
-	this.thrust=2;
+	this.thrust=10;
 	this.mass=2;
 	this.heading=180;
 	this.turnrate = 1
@@ -233,7 +233,7 @@ function fullScreenCanvasSetup(ctx,canvas){
 }
 
 function snakedemo(maxx,maxy,ctx,canvas){
-	var numboats = 1000
+	var numboats = 2000
 	//create boats
 	for (var i = 0; i < numboats; i++) { 
 		boats[i] = new Boat(Math.floor((Math.random() * maxx) + 1),Math.floor((Math.random() * maxy) + 1));
@@ -249,11 +249,12 @@ function snakedemo(maxx,maxy,ctx,canvas){
 	var moveInterval = setInterval(function(){
 		redraw(ctx,canvas)
 		document.getElementById("p1").innerHTML = "&nbspNumber of Squares: " + boats.length;
+		document.getElementById("p2").innerHTML = "&nbspIterations " + count;
 		for (var i = 0; i < numboats; i++) {	
 			boats[i].oneStep(ctx)
 		} 
 		count += 1
-	}, 50);
+	}, 25);
 }
 
 function Main(){
@@ -285,6 +286,7 @@ Main();
 		Click and drag to pan<br>
 		Mousewheel to zoom
 		 <p class="lol" id="p1">Hello World!</p>
+		 <p class="lol" id="p2">Hello World!</p>
 <!--
 		 <p id="demo" onclick="myFunction()">Reset</p>
 		
