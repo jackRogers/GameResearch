@@ -1,6 +1,26 @@
 <html>
 <head>
 <title>LOL</title>
+
+<style>
+#allofit {
+    position: relative;
+}
+
+.myui, .myui1 {
+    position: absolute;
+    width: 300px;
+    height: 170px;
+    border-radius: 1px;
+    background-color: rgba(0,0,0,0.2);
+    border: 2px solid #ccc;
+}
+.myui1{
+	width: 300px;
+    height: 100px;
+}
+</style>
+
 <script type="text/javascript">
 	
 window.onload=function () {
@@ -211,10 +231,9 @@ function fullScreenCanvasSetup(ctx,canvas){
 	canvas.addEventListener('DOMMouseScroll',handleScroll,false);
 	canvas.addEventListener('mousewheel',handleScroll,false);
 }
-
+var boats = []
 function FollowTheLeader(maxx,maxy,ctx,canvas){
 	var numboats = 200
-	var boats = [];
 	//create boats
 	for (var i = 0; i < numboats; i++) { 
 		boats[i] = new Boat(Math.floor((Math.random() * maxx) + 1),Math.floor((Math.random() * maxy) + 1));
@@ -227,17 +246,17 @@ function FollowTheLeader(maxx,maxy,ctx,canvas){
 	//move all the boats every 50ms
 	var moveInterval = setInterval(function(){
 		redraw(ctx,canvas)
+		document.getElementById("p1").innerHTML = "&nbspNumber of Squares: " + boats.length;
 		for (var i = 1; i < numboats; i++) {	
 			boats[i].oneStep(ctx)
 		} 
-		count += 1	
+		count += 1
 	}, 0);
 }
 
 function Main(){
 	//canvas
 	var canvas = document.getElementById('tutorial');
-	canvas.width = 800; canvas.height = 600;
 	var ctx = canvas.getContext('2d');
 	canvas.width = document.body.clientWidth; //document.width is obsolete
 	canvas.height = document.body.clientHeight; //document.height is obsolete
@@ -257,26 +276,22 @@ Main();
 </script>
 </head>
 <body>
-	<div id="title">
+
+<div id="allofit">
+	<div class="myui">
+		<h3>Title goes here eventually</h3>
+		Click and drag to pan<br>
+		Mousewheel to zoom
+		 <p class="lol" id="p1">Hello World!</p>
+<!--
+		 <p id="demo" onclick="myFunction()">Reset</p>
 		
-<!--
-	<h1>Title Goes here</h1>
-	Heading:
-	<p id="p1">Hello World!</p>
-	Bearing to dest:
-	<p id="p2">Hello World!</p>
-	Boat Pos:
-	<p id="p3">Hello World!</p>
-	Target Pos:
-	<p id="p4">Hello World!</p>
-	AA
-	<p id="p5">Hello World!</p>
 -->
-	
 	</div>
-<!--
-	<hr>
--->
 	<canvas id="tutorial" width="1500" height="800"></canvas>
+	
+	
+</div>
+
 </body>
 </html>
