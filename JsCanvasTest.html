@@ -44,28 +44,26 @@ function Boat(xinit,yinit) {
 				var myvar = 0;
 			}
 			var bearing = (Math.atan((this.x - this.xdest) / (this.y - this.ydest )) * 180 / Math.PI)+90 + myvar;
-
-			var dir = bearing - this.heading;
-			if (dir > 180){
-				if (dir < 0){
-					this.heading += this.turnrate;} 
-					else{
-					this.heading -= this.turnrate;
-				}
-			} else if (dir < 0){ 
-				if (this.heading > 180){
-					this.heading -= this.turnrate;
+			if (bearing > this.heading){
+				if (bearing > this.heading + 180){
+					this.heading -= this.turnrate
 				} else {
-				this.heading -= this.turnrate;
+					this.heading += this.turnrate
+				}
+			} else {
+				if (this.heading - 180 > bearing){
+					this.heading += this.turnrate
+				} else {
+					this.heading -= this.turnrate
+				}
+				
 			}
-			}  else {
-				this.heading += this.turnrate;
-			}
-		}
+					
 		this.heading = this.heading % 360;
 		if (this.heading <= 0) {this.heading += 360}
 		
 	}
+}
 	
 	this.setdest=function(x,y){
 		this.xdest = x;
