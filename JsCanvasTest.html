@@ -4,7 +4,8 @@
 <script type="text/javascript">
 	
 window.onload=function () {
-function Boat(xinit,yinit) {
+function Boat(xinit,yinit,color) {
+
 	this.x=xinit;
 	this.y=yinit;
 	this.xdest = null;
@@ -15,7 +16,7 @@ function Boat(xinit,yinit) {
 	this.heading=180;
 	this.turnrate = 1
 	this.dt=0.01
-	this.rgb = [Math.floor((Math.random() * 50) + 1),Math.floor((Math.random() * 50) + 1),Math.floor((Math.random() * 50) + 1)]
+	this.rgb = color || [Math.floor((Math.random() * 250) + 1),Math.floor((Math.random() * 250) + 1),Math.floor((Math.random() * 250) + 1)]
 	this.target = null
 	
 	this.updatePos=function() {
