@@ -22,7 +22,7 @@
 </style>
 
 <script type="text/javascript">
-	
+var boats = []
 window.onload=function () {
 function Boat(xinit,yinit,color) {
 
@@ -231,8 +231,8 @@ function fullScreenCanvasSetup(ctx,canvas){
 	canvas.addEventListener('DOMMouseScroll',handleScroll,false);
 	canvas.addEventListener('mousewheel',handleScroll,false);
 }
-var boats = []
-function FollowTheLeader(maxx,maxy,ctx,canvas){
+
+function snakedemo(maxx,maxy,ctx,canvas){
 	var numboats = 200
 	//create boats
 	for (var i = 0; i < numboats; i++) { 
@@ -241,13 +241,15 @@ function FollowTheLeader(maxx,maxy,ctx,canvas){
 	//give all boats a target to follow
 	for (var j = 1; j < boats.length; j++) {
 		boats[j].setTarget(boats[j-1])	
-	} 	
+	} 
+	boats[0].setTarget(boats[boats.length-1])	
+	
 	var count = 0;
 	//move all the boats every 50ms
 	var moveInterval = setInterval(function(){
 		redraw(ctx,canvas)
 		document.getElementById("p1").innerHTML = "&nbspNumber of Squares: " + boats.length;
-		for (var i = 1; i < numboats; i++) {	
+		for (var i = 0; i < numboats; i++) {	
 			boats[i].oneStep(ctx)
 		} 
 		count += 1
@@ -266,7 +268,7 @@ function Main(){
 	//scenario
 	var maxx=canvasW
 	var maxy=canvasH
-	FollowTheLeader(maxx,maxy,ctx,canvas)
+	snakedemo(maxx,maxy,ctx,canvas)
 }
 
 Main();
