@@ -211,19 +211,7 @@ function fullScreenCanvasSetup(ctx,canvas){
 	canvas.addEventListener('mousewheel',handleScroll,false);
 }
 
-function Main(){
-	//canvas
-	var canvas = document.getElementById('tutorial');
-	canvas.width = 800; canvas.height = 600;
-	var ctx = canvas.getContext('2d');
-	canvas.width = document.body.clientWidth; //document.width is obsolete
-	canvas.height = document.body.clientHeight; //document.height is obsolete
-	canvasW = canvas.width;
-	canvasH = canvas.height;
-	fullScreenCanvasSetup(ctx,canvas)
-	//scenario
-	var maxx=canvasW
-	var maxy=canvasH
+function FollowTheLeader(maxx,maxy,ctx,canvas){
 	var numboats = 200
 	var boats = [];
 	//create boats
@@ -244,6 +232,23 @@ function Main(){
 		count += 1	
 	}, 0);
 }
+
+function Main(){
+	//canvas
+	var canvas = document.getElementById('tutorial');
+	canvas.width = 800; canvas.height = 600;
+	var ctx = canvas.getContext('2d');
+	canvas.width = document.body.clientWidth; //document.width is obsolete
+	canvas.height = document.body.clientHeight; //document.height is obsolete
+	canvasW = canvas.width;
+	canvasH = canvas.height;
+	fullScreenCanvasSetup(ctx,canvas)
+	//scenario
+	var maxx=canvasW
+	var maxy=canvasH
+	FollowTheLeader(maxx,maxy,ctx,canvas)
+}
+
 Main();
 }
 
