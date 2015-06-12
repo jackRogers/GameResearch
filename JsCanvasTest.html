@@ -23,8 +23,6 @@ function Boat(xinit,yinit) {
 		this.y = this.y - Math.sin(this.heading * Math.PI/180) * this.speed * this.dt;
 	}
 	
-	
-	
 	this.updateTargetPos=function(){
 		this.setdest(this.target.x,this.target.y)
 	}
@@ -56,7 +54,6 @@ function Boat(xinit,yinit) {
 				} else {
 					this.heading -= this.turnrate
 				}
-				
 			}
 					
 		this.heading = this.heading % 360;
@@ -83,7 +80,17 @@ function Boat(xinit,yinit) {
 		ctx.fillStyle = "rgba("+this.rgb[0]+", "+this.rgb[1]+", "+this.rgb[2]+", 0.5)";
 		ctx.fillRect (this.x, this.y, 10, 10);
 	}
+
+	this.oneStep=function(ctx){
+		this.acc()
+		this.updateVel();
+		this.updateTargetPos()	
+		this.turn();
+		this.updatePos();
+		this.draw(ctx);
+	}
 }
+
 
 function redraw(ctx,canvas){
 	// Clear the entire canvas
@@ -232,12 +239,7 @@ function Main(){
 	var moveInterval = setInterval(function(){
 		redraw(ctx,canvas)
 		for (var i = 1; i < numboats; i++) {	
-			boats[i].acc()
-			boats[i].updateVel();
-			boats[i].draw(ctx);
-			boats[i].updateTargetPos()	
-			boats[i].turn();
-			boats[i].updatePos();	
+			boats[i].oneStep(ctx)
 		} 
 		count += 1	
 	}, 0);
