@@ -31,7 +31,7 @@ function Boat(xinit,yinit,color) {
 	this.xdest = null;
 	this.ydest = null;
 	this.speed=20;
-	this.thrust=1;
+	this.thrust=2;
 	this.mass=2;
 	this.heading=180;
 	this.turnrate = 1
@@ -233,7 +233,7 @@ function fullScreenCanvasSetup(ctx,canvas){
 }
 
 function snakedemo(maxx,maxy,ctx,canvas){
-	var numboats = 200
+	var numboats = 2000
 	//create boats
 	for (var i = 0; i < numboats; i++) { 
 		boats[i] = new Boat(Math.floor((Math.random() * maxx) + 1),Math.floor((Math.random() * maxy) + 1));
