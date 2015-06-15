@@ -28,27 +28,6 @@ window.onload=function () {
 function myrandint(high){
 	return Math.floor((Math.random() * high) + 1)
 }
-
-function getAngToTurn(boat){
-	if (boat.heading > 180){
-		heading_norm = boat.heading - 360
-	} else {
-		heading_norm = boat.heading
-	}
-	if (boat.bearing > 180){
-		bearing_norm = boat.bearing - 360
-	} else { 
-		bearing_norm = boat.bearing
-	}
-	var diff = bearing_norm - heading_norm
-	if (diff > 180){
-		diff = diff - 360
-	} else if ( diff < -180) {
-		diff = (diff - 360) * -1
-	}
-	this.AngToTarget = diff	
-	}
-
 	
 function Boat(xinit,yinit,color,team) {
 
@@ -85,25 +64,6 @@ function Boat(xinit,yinit,color,team) {
 		this.updateTargetPos()
 	}
 	
-	this.getAngToTurn=function(){
-		if (this.heading > 180){
-			heading_norm = this.heading - 360
-		} else {
-			heading_norm = this.heading}
-		if (this.bearing > 180){
-			bearing_norm = this.bearing - 360
-		} else { 
-			bearing_norm = this.bearing
-		}
-		var diff = bearing_norm - heading_norm
-		if (diff > 180){
-			diff = diff - 360
-		} else if ( diff < -180) {
-			diff = (diff - 360) * -1
-		}
-		this.AngToTarget = diff	
-	}
-	
 	this.distToTarget=function(){
 		return Math.sqrt(Math.pow(this.x - this.xdest,2)+ Math.pow(this.y - this.ydest,2))
 	}
@@ -114,8 +74,7 @@ function Boat(xinit,yinit,color,team) {
 	}
 	
 	this.turn=function(ctx) {
-		if (this.xdest == null){
-			//do nothing 
+		if (this.xdest == null){ 
 			lol=1;
 		} else {
 			if (this.y < this.ydest){
@@ -124,17 +83,25 @@ function Boat(xinit,yinit,color,team) {
 				var myvar = 0;
 			}
 			this.bearing = (Math.atan((this.x - this.xdest) / (this.y - this.ydest )) * 180 / Math.PI)+90 + myvar;
-			this.getAngToTurn()
-			if (this.AngToTarget >0){
-				this.heading += this.turnrate
-			} else if (this.AngToTarget < 0)
-				{ this.heading -= this.turnrate}
+			if (this.bearing > this.heading){
+				if (this.bearing > this.heading + 180){
+					this.heading -= this.turnrate
+				} else {
+					this.heading += this.turnrate
+				}
+			} else {
+				if (this.heading - 180 > this.bearing){
+					this.heading += this.turnrate
+				} else {
+					this.heading -= this.turnrate
+				}
+			}
 					
-			this.heading = this.heading % 360;
-			if (this.heading <= 0) {this.heading += 360}
+		this.heading = this.heading % 360;
+		if (this.heading <= 0) {this.heading += 360}
 		
-		}
 	}
+}
 	
 
 	
@@ -162,7 +129,7 @@ function Boat(xinit,yinit,color,team) {
 	
 	this.fire=function(canvas,ctx){
 		if (this.distToTarget() < this.weprange){
-			if (Math.abs(this.AngToTarget) < this.maxfireangle){
+			if (Math.abs(this.bearing - this.heading) < this.maxfireangle){
 				ctx.beginPath();
 				ctx.moveTo(this.x,this.y);
 				ctx.lineTo(this.xdest,this.ydest);
@@ -492,7 +459,6 @@ function Main(){
 
 Main();
 }
-
 
 	
 </script>
