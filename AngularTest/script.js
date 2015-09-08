@@ -9,20 +9,20 @@
         
 			// route for the home page
             .when('/', {
-                templateUrl : '/main.html',
+                templateUrl : 'main.html',
                 controller  : 'mainController'
             })
             
             
             // route for the about page
             .when('/page1', {
-                templateUrl : '/page1.html',
+                templateUrl : 'page1.html',
                 controller  : 'page1Controller'
             })
 
             // route for the contact page
             .when('/page2', {
-                templateUrl : '/page2.html',
+                templateUrl : 'page2.html',
                 controller  : 'page2Controller'
             });
     });
