@@ -1,0 +1,10 @@
+Game Research
+
+AngularTest - Testing the capabilities of angularjs in creating a webapp
+http://jackrogers.github.io/GameResearch/AngularTest/index.html#/
+
+JsCanvasTest - testing the capabilities of the vanilla html5 canvas and make sure my agents can properly move with momentum and track moving targets
+http://jackrogers.github.io/GameResearch/SpaceBattle/JsCanvasTest.html
+
+JsCanvasTeams - two teams of squares dogfight 
+http://jackrogers.github.io/GameResearch/SpaceBattle/JsCanvasTeams.html
