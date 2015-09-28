@@ -1,7 +1,16 @@
 <!-- home.html -->
-    <div class="jumbotron text-center">
-        <h1>Home Page</h1>
-
-        <p>{{ message }}</p>
-    </div>
-
+<div class="row">
+	<div class="col-md-1">
+		<p> {{mycounter}} </p>
+	<h1>Males </h1>
+	<div ng-repeat="male in Males" class="col-md-0"> 
+		<p style="font-size:50%" class="title">{{ male.id }}</p> 
+	</div>
+	</div>
+	<div class="col-md-1">
+	<h1>Females</h1>
+	<div ng-repeat="female in Females" class="col-md-0"> 
+		<p style="font-size:50%" class="title">{{ female.id }}</p> 
+	</div>
+	</div>
+</div>
