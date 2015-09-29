@@ -1,16 +1,50 @@
 <!-- home.html -->
 <div class="row">
+	<div class="col-md-5">
+		<p>Year: {{turncounter}} </p>
+	</div>
+</div><br><br>
+<div class="row">
+	<div class="col-md-5">
+		<table border="1" style="width:50%">
+			<tr>
+				<th></th>
+				<th>Male</th>
+				<th>Female</th>
+			</tr>
+			<tr>
+				<th>Population</th>
+				<td>{{ Males.length | number:0 }}</td>
+				<td>{{ Females.length | number:0 }}</td>
+			</tr>
+			<tr>
+				<th>Age Avg</th>
+				<td>{{ avgMaleAge | number:2 }}</td>
+				<td>{{ avgFemaleAge | number:2 }}</td>
+			</tr>
+			<tr>
+				<th>Age Health</th>
+				<td>{{ avgMaleHealth | number:2 }}</td>
+				<td>{{ avgFemaleHealth | number:2 }}</td>
+			</tr>
+		</table>
+	</div>
+	
+	
+	
+	
+<!--
 	<div class="col-md-1">
-		<p> {{mycounter}} </p>
-	<h1>Males </h1>
-	<div ng-repeat="male in Males" class="col-md-0"> 
-		<p style="font-size:50%" class="title">{{ male.id }}</p> 
-	</div>
+		<h1>Males </h1>
+		<div ng-repeat="male in Males" class="col-md-1"> 
+			<p style="font-size:50%" class="title">{{ male.id }}</p> 
+		</div>
 	</div>
 	<div class="col-md-1">
-	<h1>Females</h1>
-	<div ng-repeat="female in Females" class="col-md-0"> 
-		<p style="font-size:50%" class="title">{{ female.id }}</p> 
+		<h1>Females</h1>
+		<div ng-repeat="female in Females" class="col-md-1"> 
+			<p style="font-size:50%" class="title">{{ female.id }}</p> 
+		</div>
 	</div>
-	</div>
+-->
 </div>

@@ -39,7 +39,7 @@
         
         
         if ($scope.started != true){
-			$scope.mycounter = 0;
+			$scope.turncounter = 0;
 			$scope.started = true;
 			$scope.idIter = 0;
 			$scope.Males = [];
@@ -50,6 +50,7 @@
 			$scope.Person = function(){
 				this.id = $scope.idIter;
 				this.age = 0;
+				this.health = 100;
 				$scope.idIter += 1;
 				genderBool = $scope.randInt(0,1);
 				if (genderBool == 0){
@@ -65,9 +66,17 @@
 						if (this.gender == "Male") {
 							$scope.unmarriedMales.push(this);
 						} else {
-							$scope.unmarriedFenales.push(this);
+							$scope.unmarriedFemales.push(this);
 						}
 					}
+					this.health -= 1
+					if ($scope.randInt(0,this.health) < 1){
+						this.die();
+					}
+				}
+				this.die = function(){
+					$scope[this.gender + "s"].splice($scope[this.gender + "s"].indexOf(this), 1);
+					$scope["unmarried" + this.gender + "s"].splice($scope[this.gender + "s"].indexOf(this), 1);
 				}
 			}
 				
@@ -76,13 +85,50 @@
 				person.age = p;
 			}
 			
+			$scope.meanOfAttr= function(attr){
+				var sum = 0;
+				for (var i = 0; i < $scope.Males.length; i++){
+					sum += $scope.Males[i][attr];
+				}
+				var maleAvg = sum / parseFloat($scope.Males.length)
+				var sum = 0;
+				for (var i = 0; i < $scope.Females.length; i++){
+					sum += $scope.Females[i][attr];
+				}
+				var femaleAvg = sum / parseFloat($scope.Females.length);
+				console.log(maleAvg);
+				return [maleAvg, femaleAvg];
+			}
+			
+			$scope.calcAverages = function(){
+				ageAvgs = $scope.meanOfAttr('age');
+				$scope.avgMaleAge = ageAvgs[0]
+				$scope.avgFemaleAge = ageAvgs[1]
+				healthAvgs = $scope.meanOfAttr('health');
+				$scope.avgMaleHealth = healthAvgs[0]
+				$scope.avgFemaleHealth = healthAvgs[1]
+			}
+			
+			
+			$scope.oneYear = function(){
+				for (var i = 0; i < $scope.Males.length; i++){
+					$scope.Males[i].birthday()
+				}
+				for (var i = 0; i < $scope.Females.length; i++){
+					$scope.Females[i].birthday()
+				}
+			}
+			
+			
 			$scope.intervalFunc = function(){
 				urp = $timeout(function myfunction(){
 					x = new $scope.Person();
-					$scope.mycounter++;
+					$scope.turncounter++;
+					$scope.oneYear();
+					$scope.calcAverages()
 					$scope.$apply();
-					urp = $timeout($scope.intervalFunc, 1000);
-				},1000);
+					urp = $timeout($scope.intervalFunc, 100);
+				},100);
 			}
 			$scope.intervalFunc();
 			
