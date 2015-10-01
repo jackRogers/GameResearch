@@ -33,7 +33,6 @@
         // create a message to display in our view
         
        $scope.randInt = function(low,high){
-		   console.log(Math.floor((Math.random() * (high + low + 1) ) - low));
 			return Math.floor((Math.random() * (high + low + 1) - low));
 		}
         
@@ -44,13 +43,18 @@
 			$scope.idIter = 0;
 			$scope.Males = [];
 			$scope.Females = [];
-			$scope.unmarriedMales = [];
-			$scope.unmarriedFemales = [];
+			//$scope.unmarriedMales = [];
+			//$scope.unmarriedFemales = [];
+			//$scope.Couples = [];
 			
 			$scope.Person = function(){
+				this.alive = true;
 				this.id = $scope.idIter;
 				this.age = 0;
 				this.health = 100;
+				this.spouse = false;
+				this.parents = [];
+				this.children = [];
 				$scope.idIter += 1;
 				genderBool = $scope.randInt(0,1);
 				if (genderBool == 0){
@@ -62,27 +66,60 @@
 				}
 				this.birthday = function(){
 					this.age += 1;
-					if (this.age > 15){
-						if (this.gender == "Male") {
-							$scope.unmarriedMales.push(this);
-						} else {
-							$scope.unmarriedFemales.push(this);
-						}
-					}
+					//if (this.age == 16){
+						//if (this.gender == "Male") {
+							//$scope.unmarriedMales.push(this);
+						//} else {
+							//$scope.unmarriedFemales.push(this);
+						//}
+					//} 
+					
 					this.health -= 1
 					if ($scope.randInt(0,this.health) < 1){
 						this.die();
 					}
 				}
-				this.die = function(){
-					$scope[this.gender + "s"].splice($scope[this.gender + "s"].indexOf(this), 1);
-					$scope["unmarried" + this.gender + "s"].splice($scope[this.gender + "s"].indexOf(this), 1);
-				}
-			}
 				
-			for (var p = 0; p < 100; p++) {
-				person = new $scope.Person();
-				person.age = p;
+				this.findSpouse = function(){
+					if (this.age >= 16 && this.spouse == false){
+						if (this.gender == "Male"){
+							var randomFemale = $scope.Females[$scope.randInt(0,$scope.Females.length - 1)]
+							if (randomFemale.spouse == false && randomFemale.age >= 16  && randomFemale.age <= 40){
+								randomFemale.spouse = this;
+								this.spouse = randomFemale;
+							}
+						} else {
+							var randomMale = $scope.Males[$scope.randInt(0,$scope.Males.length - 1)]
+							if (randomMale.spouse == false && randomMale.age >= 16 ){
+								randomMale.spouse = this;
+								this.spouse = randomMale;
+							}
+						}
+					}
+				}
+				
+				this.haveBabies = function(){
+					if (this.gender == "Female" && this.age >= 16 && this.age <= 40 && this.spouse != false){
+						var fertility = this.health - this.age;
+						var roll = $scope.randInt(0,100);
+						if (fertility > roll){
+							x = new $scope.Person();
+							x.parents.push(this);
+							x.parents.push(this.spouse);
+							this.children.push(x);
+							this.spouse.children.push(x);
+						}
+					}
+				}
+				
+				this.die = function(){
+					this.alive = false;
+					if (this.spouse != false){
+						this.spouse.spouse = false;
+					}
+					$scope[this.gender + "s"].splice($scope[this.gender + "s"].indexOf(this), 1);
+					//$scope["unmarried" + this.gender + "s"].splice($scope[this.gender + "s"].indexOf(this), 1);
+				}
 			}
 			
 			$scope.meanOfAttr= function(attr){
@@ -96,7 +133,6 @@
 					sum += $scope.Females[i][attr];
 				}
 				var femaleAvg = sum / parseFloat($scope.Females.length);
-				console.log(maleAvg);
 				return [maleAvg, femaleAvg];
 			}
 			
@@ -112,20 +148,26 @@
 			
 			$scope.oneYear = function(){
 				for (var i = 0; i < $scope.Males.length; i++){
-					$scope.Males[i].birthday()
+					$scope.Males[i].findSpouse();
+					$scope.Males[i].birthday();
 				}
 				for (var i = 0; i < $scope.Females.length; i++){
+					$scope.Females[i].findSpouse();
+					$scope.Females[i].haveBabies();
 					$scope.Females[i].birthday()
 				}
+			}
+			for (var i = 0; i < 100; i++){
+				x = new $scope.Person();
+				x.age = i;
 			}
 			
 			
 			$scope.intervalFunc = function(){
 				urp = $timeout(function myfunction(){
-					x = new $scope.Person();
 					$scope.turncounter++;
 					$scope.oneYear();
-					$scope.calcAverages()
+					//$scope.calcAverages()
 					$scope.$apply();
 					urp = $timeout($scope.intervalFunc, 100);
 				},100);
