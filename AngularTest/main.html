@@ -1,11 +1,16 @@
 <!-- home.html -->
 <div class="row">
 	<div class="col-md-5">
-		<p>Year: {{turncounter}} </p>
+		<p>Year: {{turncounter | number :1}} <input type=submit ng-click="pauseResume()" value='Pause/Resume'> </p>
+		<br>
+		
 	</div>
-</div><br><br>
+</div>
+
+<br><br>
+
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-2">
 		<table border="1" style="width:50%">
 			<tr>
 				<th></th>
@@ -14,21 +19,40 @@
 			</tr>
 			<tr>
 				<th>Population</th>
-				<td>{{ Males.length | number:0 }}</td>
-				<td>{{ Females.length | number:0 }}</td>
-			</tr>
-			<tr>
-				<th>Age Avg</th>
-				<td>{{ avgMaleAge | number:2 }}</td>
-				<td>{{ avgFemaleAge | number:2 }}</td>
-			</tr>
-			<tr>
-				<th>Age Health</th>
-				<td>{{ avgMaleHealth | number:2 }}</td>
-				<td>{{ avgFemaleHealth | number:2 }}</td>
+				<td>{{ Population.Males| number:0 }}</td>
+				<td>{{ Population.Females | number:0 }}</td>
 			</tr>
 		</table>
 	</div>
+	
+	<div class="col-md-2">
+		<table border="1" style="width:50%">
+			<tr>
+				<th>Births</th>
+				<th>Deaths</th>
+				<th>Change</th>
+			</tr>
+			<tr>
+				<td>{{ Stats.birthsThisYear| number:0 }}</td>
+				<td>{{ Stats.deathsThisYear | number:0 }}</td>
+				<td>{{ Stats.populationChangeThisYear | number:0 }}</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="col-md-2">
+		<table border="1" style="width:50%">
+			<tr>
+				<th>Average Age</th>
+			</tr>
+			<tr>
+				<td>{{ Stats.averageAge| number:0 }}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+	
+	
 	
 	
 	
@@ -47,4 +71,4 @@
 		</div>
 	</div>
 -->
-</div>
+
