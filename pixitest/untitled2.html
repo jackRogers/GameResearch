@@ -1,0 +1,272 @@
+
+<html>
+<head>
+	<title>pixi.js example 1</title>
+	<style>
+		body {
+			margin: 6;
+			padding: 6;
+			background-color: #FFFFFF;
+		}
+	</style>
+	
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+	<script src="../../pixi.js/bin/pixi.js"></script>
+
+</head>
+<body>
+
+	<script>
+
+var renderer = PIXI.autoDetectRenderer(document.body.clientWidth-200, document.body.clientHeight-200);
+document.body.appendChild(renderer.view);
+
+var stage = new PIXI.Container();
+stage.interactive = true;
+stage.click = function(){
+	
+	console.log("no way")}
+	stage
+        .on('mousedown', onDragStart2)
+        .on('touchstart', onDragStart2)
+        // events for drag end
+        .on('mouseup', onDragEnd2)
+        .on('mouseupoutside', onDragEnd2)
+        .on('touchend', onDragEnd2)
+        .on('touchendoutside', onDragEnd2)
+        // events for drag move
+        .on('mousemove', onDragMove2)
+        .on('touchmove', onDragMove2);
+
+var texture = PIXI.Texture.fromImage('bunny.png');
+
+
+
+stage.width = document.body.clientWidth;
+stage.height = document.body.clientHeight;
+
+var camera = new PIXI.Container();
+camera.visible = true;
+camera.buttonMode = true;
+camera.render = true;
+camera.interactive = true;
+camera.position.x = 0;
+camera.position.y = 0;
+camera.width = 800;
+camera.height = 600;
+camera.click = function(){
+	console.log("lmao")}
+
+document.addEventListener("mousewheel", mouseWheelHandler, false);
+
+function mouseWheelHandler(e) {
+
+	// cross-browser wheel delta
+	var e = window.event || e;
+	var delta = e.wheelDelta > 0 ? 2 : 0.5;
+	camera.scale.x *= delta
+	camera.scale.y *= delta
+	console.log("fuck")
+}
+
+function keyboard(keyCode) {
+  var key = {};
+  key.code = keyCode;
+  key.isDown = false;
+  key.isUp = true;
+  key.press = undefined;
+  key.release = undefined;
+  //The `downHandler`
+  key.downHandler = function(event) {
+    if (event.keyCode === key.code) {
+      if (key.isUp && key.press) key.press();
+      key.isDown = true;
+      key.isUp = false;
+    }
+    event.preventDefault();
+  };
+
+  //The `upHandler`
+  key.upHandler = function(event) {
+    if (event.keyCode === key.code) {
+      if (key.isDown && key.release) key.release();
+      key.isDown = false;
+      key.isUp = true;
+    }
+    event.preventDefault();
+  };
+
+  //Attach event listeners
+  window.addEventListener(
+    "keydown", key.downHandler.bind(key), false
+  );
+  window.addEventListener(
+    "keyup", key.upHandler.bind(key), false
+  );
+  return key;
+}
+
+ var left = keyboard(37),
+      up = keyboard(38),
+      right = keyboard(39),
+      down = keyboard(40);
+ 
+  left.press = function() {
+	  camera.position.x += 10
+  }
+  right.press = function() {
+	  camera.position.x -= 10
+  }
+	up.press = function() {
+	  camera.position.y += 10
+  }
+  down.press = function() {
+	  camera.position.y -= 10
+  }
+	  
+var graphics = new PIXI.Graphics();
+
+graphics.lineStyle(0);
+	graphics.beginFill(0xFFFF0B, 0.5);
+	graphics.drawCircle(220,220,1000);
+	graphics.endFill();
+  
+stage.addChild(graphics)
+for (var i = 0; i < 10; i++)
+{
+	graphics.lineStyle(0);
+	graphics.beginFill(0xFFFF0B, 0.5);
+	graphics.drawCircle(Math.floor(Math.random() * 800) , Math.floor(Math.random() * 600),60);
+	graphics.endFill();
+    createBunny(Math.floor(Math.random() * 800) , Math.floor(Math.random() * 600));
+}
+
+
+function keyturn(){
+	if (left.isDown){
+		left.press()}
+	if (right.isDown){
+		right.press()}
+	if (up.isDown){
+		up.press()}
+	if (down.isDown){
+		down.press()}	
+}
+function createBunny(x, y)
+{
+    // create our little bunny friend..
+    var bunny = new PIXI.Sprite(texture);
+
+    // enable the bunny to be interactive... this will allow it to respond to mouse and touch events
+    bunny.interactive = true;
+
+    // this button mode will mean the hand cursor appears when you roll over the bunny with your mouse
+    bunny.buttonMode = true;
+
+    // center the bunny's anchor point
+    bunny.anchor.set(0.5);
+
+    // make it a bit bigger, so it's easier to grab
+    bunny.scale.set(3);
+
+    // setup events
+    bunny
+        // events for drag start
+        .on('mousedown', onDragStart)
+        .on('touchstart', onDragStart)
+        // events for drag end
+        .on('mouseup', onDragEnd)
+        .on('mouseupoutside', onDragEnd)
+        .on('touchend', onDragEnd)
+        .on('touchendoutside', onDragEnd)
+        // events for drag move
+        .on('mousemove', onDragMove)
+        .on('touchmove', onDragMove);
+
+    // move the sprite to its designated position
+    bunny.position.x = x;
+    bunny.position.y = y;
+
+    // add it to the stage
+    camera.addChild(bunny);
+}
+stage.addChild(camera);
+
+requestAnimationFrame( animate );
+
+function animate() {
+
+    requestAnimationFrame(animate);
+	keyturn()
+    // render the stage
+    renderer.render(stage);
+}
+
+function onDragStart(event)
+{
+	event.stopPropagation();
+    // store a reference to the data
+    // the reason for this is because of multitouch
+    // we want to track the movement of this particular touch
+    this.data = event.data;
+    this.alpha = 0.5;
+    this.dragging = true;
+}
+
+function onDragStart2(event)
+{
+	event.stopPropagation();
+    // store a reference to the data
+    // the reason for this is because of multitouch
+    // we want to track the movement of this particular touch
+    this.data = event.data;
+    this.dragging = true;
+}
+
+
+function onDragEnd()
+{
+    this.alpha = 1;
+
+    this.dragging = false;
+
+    // set the interaction data to null
+    this.data = null;
+}
+
+function onDragEnd2()
+{
+    this.alpha = 1;
+
+    this.dragging = false;
+
+    // set the interaction data to null
+    this.data = null;
+}
+
+function onDragMove()
+{
+    if (this.dragging)
+    {
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.position.x = Math.ceil(newPosition.x);
+        this.position.y = Math.ceil(newPosition.y);
+    }
+}
+
+function onDragMove2()
+{
+    if (this.dragging)
+    {
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.position.x += Math.ceil(newPosition.x - this.position.x);
+        this.position.y += Math.ceil(newPosition.y - this.position.y);
+        
+    }
+}
+
+	</script>
+ 
+	</body>
+</html>
