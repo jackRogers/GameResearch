@@ -8,3 +8,6 @@ http://jackrogers.github.io/GameResearch/SpaceBattle/JsCanvasTest.html
 
 JsCanvasTeams - two teams of squares dogfight 
 http://jackrogers.github.io/GameResearch/SpaceBattle/JsCanvasTeams.html
+
+panzoomdragcanvas - new panable draggable zoomable canvas in opengl using pixi
+http://jackrogers.github.io/GameResearch/pixitest/panzoomdragcanvas.html
