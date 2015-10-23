@@ -16,17 +16,17 @@
 
 </head>
 <body>
+  <canvas id='canvas'></canvas>
 
 	<script>
-
-var renderer = PIXI.autoDetectRenderer(document.body.clientWidth-200, document.body.clientHeight-200);
+var canvas = document.getElementById('canvas');
+var renderer = PIXI.autoDetectRenderer(document.body.clientWidth-25, document.body.clientHeight-25, {view:canvas});
 document.body.appendChild(renderer.view);
 
 var stage = new PIXI.Container();
 //stage.interactive = true;
 //stage.click = function(){
 	
-	//console.log("no way")
 	//}
 	//stage
         //.on('mousedown', onDragStart2)
@@ -52,12 +52,11 @@ world.visible = true;
 world.buttonMode = true;
 world.render = true;
 world.interactive = true;
-world.position.x = 0;
-world.position.y = 0;
+world.position.x = 100;
+world.position.y = 100;
 world.width = 800;
 world.height = 600;
-world.click = function(){
-	console.log("lmao")}
+world.scale = new PIXI.Point(1,1)
 	world
         .on('mousedown', onDragStart2)
         .on('touchstart', onDragStart2)
@@ -71,16 +70,22 @@ world.click = function(){
         .on('touchmove', onDragMove2);
 
 document.addEventListener("mousewheel", mouseWheelHandler, false);
+var SCALE_MIN = 0
+var SCALE_MAX = 10
 
 function mouseWheelHandler(e) {
-
+	console.log(e)
 	// cross-browser wheel delta
 	var e = window.event || e;
-	var delta = e.wheelDelta > 0 ? 2 : 0.5;
-	world.scale.x *= delta
-	world.scale.y *= delta
-	console.log("fuck")
-}
+	var delta = e.wheelDelta > 0 ? 1.1 : 0.9;
+	var worldPos = {x: (e.pageX - world.x) / world.scale.x, y: (e.pageY - world.y)/world.scale.y}
+	var newScale = {x: world.scale.x * delta, y: world.scale.y * delta}
+	var newScreenPos = {x: (worldPos.x ) * newScale.x + world.x, y: (worldPos.y) * newScale.y + world.y}
+	world.x -= (newScreenPos.x-e.pageX ) 
+	world.y -= (newScreenPos.y-e.pageY ) 
+	world.scale.x = newScale.x;
+	world.scale.y = newScale.y;
+	}
 
 function keyboard(keyCode) {
   var key = {};
@@ -103,7 +108,7 @@ function keyboard(keyCode) {
   key.upHandler = function(event) {
     if (event.keyCode === key.code) {
       if (key.isDown && key.release) key.release();
-      key.isDown = false;
+      key.isDown = false; 
       key.isUp = true;
     }
     event.preventDefault();
@@ -123,6 +128,7 @@ function keyboard(keyCode) {
       up = keyboard(38),
       right = keyboard(39),
       down = keyboard(40);
+      space = keyboard(32)
  
   left.press = function() {
 	  world.position.x += 10
@@ -136,23 +142,30 @@ function keyboard(keyCode) {
   down.press = function() {
 	  world.position.y -= 10
   }
+  space.press = function() {
+	  world.position.x = 100
+	  world.position.y = 100
+	  world.scale = new PIXI.Point(1,1)
+	  
+
+	  }
 	  
 var graphics = new PIXI.Graphics();
 
-for (var x = 0; x < 800; x += 5){
-	for (var y = 0; y < 600; y += 5){
-		graphics.lineStyle(1);
+for (var x = 0; x < 800; x+=5){
+	for (var y = 0; y < 600; y +=5){
+		graphics.lineStyle(0.5);
 		graphics.beginFill(0xFFFF0B, 0.5);
-		graphics.drawRect(x-2.5 ,y-2.5 ,5,5);
+		graphics.drawRect(x-0.5 ,y-0.5 ,5,5);
 		graphics.endFill();
 	}
 }
 
 world.addChild(graphics)
 
-for (var i = 0; i < 10; i++)
+for (var i = 0; i < 1; i++)
 {
-    createBunny(Math.floor(Math.random() * 800) , Math.floor(Math.random() * 600));
+    createBunny(100,100);
 }
 
 
@@ -181,8 +194,8 @@ function createBunny(x, y)
     bunny.anchor.set(0.5);
 
     // make it a bit bigger, so it's easier to grab
-    bunny.scale.set(3);
-
+    bunny.scale.set(1);
+    
     // setup events
     bunny
         // events for drag start
@@ -223,8 +236,17 @@ function onDragStart(event)
     // the reason for this is because of multitouch
     // we want to track the movement of this particular touch
     this.data = event.data;
+    this.myclick = this.data.getLocalPosition(this)
+    this.myx = this.myclick.x
+    this.myy = this.myclick.y
+    var newPosition = this.data.getLocalPosition(this.parent)
+	        
+
+
     this.alpha = 0.5;
     this.dragging = true;
+
+
 }
 
 function onDragStart2(event)
@@ -234,8 +256,12 @@ function onDragStart2(event)
     // the reason for this is because of multitouch
     // we want to track the movement of this particular touch
     this.data = event.data;
+    this.myclick = this.data.getLocalPosition(this)
+    this.myx = this.myclick.x
+    this.myy = this.myclick.y
+        var newPosition = this.data.getLocalPosition(this.parent)
+
     this.dragging = true;
-    console.log(parseInt(this.data.global.x) + ' ' + parseInt(this.data.global.y))
 }
 
 
@@ -243,8 +269,9 @@ function onDragEnd()
 {
     this.alpha = 1;
 
-    this.dragging = false;
 
+    this.dragging = false;
+	
     // set the interaction data to null
     this.data = null;
 }
@@ -254,7 +281,6 @@ function onDragEnd2()
     this.alpha = 1;
 
     this.dragging = false;
-
     // set the interaction data to null
     this.data = null;
 }
@@ -263,9 +289,10 @@ function onDragMove()
 {
     if (this.dragging)
     {
-        var newPosition = this.data.getLocalPosition(this.parent);
-        this.position.x = Math.ceil(newPosition.x);
-        this.position.y = Math.ceil(newPosition.y);
+        var newPosition = this.data.getLocalPosition(this.parent)
+        this.position.x = Math.ceil(newPosition.x - this.myx);
+        this.position.y = Math.ceil(newPosition.y - this.myy)
+        
     }
 }
 
@@ -273,10 +300,9 @@ function onDragMove2()
 {
     if (this.dragging)
     {
-        var newPosition = this.data.getLocalPosition(world);
-        console.log(newPosition)
-        this.position.x = newPosition.x;
-        this.position.y = newPosition.y;
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.position.x = Math.ceil(newPosition.x - this.myx * this.scale.x);
+        this.position.y = Math.ceil(newPosition.y - this.myy * this.scale.y)
         
     }
 }
