@@ -161,17 +161,24 @@ function closestTarget(targetList,boat){
 }
 
 function twoTeams(){
+
 	var redboats = 100
 	var blueboats = 100
 	var reds = []
 	var blues = []
+	var bluecounter = new PIXI.Text(blues.length, { font: '35px', fill: 'lightblue', align: 'left' });
+	bluecounter.position.set(20,30);
+	var redcounter = new PIXI.Text(reds.length, { font: '35px', fill: 'red', align: 'left' });
+	redcounter.position.set(20,40);
+	interface.addChild(bluecounter)
+	interface.addChild(redcounter)
 	//create redboats
 	for (var i = 0; i < redboats; i++) { 
 		reds[i] = new Boat(myrandint(600),100, 0xFF0000,1);
 	}
 	//create blueboats
 	for (var i = 0; i < blueboats; i++) { 
-		blues[i] = new Boat(myrandint(600),800,0x0000FF,2);
+		blues[i] = new Boat(myrandint(600),600,0x0000FF,2);
 	}
 	//set initial targets
 	for (var i = 0; i < blues.length; i++) {
@@ -183,7 +190,9 @@ function twoTeams(){
 	var count = 0;
 	//move all the boats every 50ms
 	var moveInterval = function(){
-		
+		bluecounter.text = blues.length
+		redcounter.text = reds.length
+
 		for (var i = 0; i < reds.length; i++) {	
 			reds[i].oneStepFight()
 		}  
@@ -233,6 +242,7 @@ function twoTeams(){
 	//}
 	//searchInterval()
 } 
+
 
 
 function Main(){

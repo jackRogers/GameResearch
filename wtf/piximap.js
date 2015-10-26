@@ -8,6 +8,13 @@ var stage = new PIXI.Container();
 stage.width = document.body.clientWidth;
 stage.height = document.body.clientHeight;
 
+var interface = new PIXI.Container();
+var mytitle = new PIXI.Text('Pixi.js Rts Engine Test', { font: '35px', fill: 'white', align: 'left' });
+mytitle.position.set(20);
+interface.addChild(mytitle)
+stage.addChild(interface)
+
+
 var world = new PIXI.Container();
 world.visible = true;
 world.buttonMode = true;

@@ -8,6 +8,16 @@ var stage = new PIXI.Container();
 stage.width = document.body.clientWidth;
 stage.height = document.body.clientHeight;
 
+var interface = new PIXI.Container();
+var mytitle = new PIXI.Text('Pixi.js Game Engine Test', { font: '35px', fill: 'white', align: 'left' });
+mytitle.position.set(20);
+interface.addChild(mytitle)
+var instructions = new PIXI.Text('Arrows keys to Pan (or click and drag)\nMousewheel to Zoom\nSpacebar to reset position', { font: '35px', fill: 'white', align: 'left' });
+instructions.position.set(20,50);
+interface.addChild(instructions)
+stage.addChild(interface)
+
+
 var world = new PIXI.Container();
 world.visible = true;
 world.buttonMode = true;
@@ -33,11 +43,11 @@ world.scale = new PIXI.Point(1,1)
 
 var graphics = new PIXI.Graphics();
 
-for (var x = 0; x < 800; x+=5){
-	for (var y = 0; y < 600; y +=5){
-		graphics.lineStyle(0.5);
-		graphics.beginFill(0xFFFF0B, 0.5);
-		graphics.drawRect(x-0.5 ,y-0.5 ,5,5);
+for (var x = -100000; x < 200000; x+=5000){
+	for (var y = -100000; y < 200000; y +=5000){
+		graphics.lineStyle(0);
+		graphics.beginFill(0xFFFFFF, 0.5);
+		graphics.drawRect(x-0.5 ,y-0.5 ,5000,5000);
 		graphics.endFill();
 	}
 }
