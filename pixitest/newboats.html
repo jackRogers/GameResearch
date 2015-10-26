@@ -150,18 +150,18 @@ function keyboard(keyCode) {
 
 	  }
 	  
-var graphics = new PIXI.Graphics();
+//var graphics = new PIXI.Graphics();
 
-for (var x = 0; x < 800; x+=5){
-	for (var y = 0; y < 600; y +=5){
-		graphics.lineStyle(0.5);
-		graphics.beginFill(0xFFFF0B, 0.5);
-		graphics.drawRect(x-0.5 ,y-0.5 ,5,5);
-		graphics.endFill();
-	}
-}
+////for (var x = 0; x < 800; x+=5){
+	////for (var y = 0; y < 600; y +=5){
+		////graphics.lineStyle(0.5);
+		////graphics.beginFill(0xFFFF0B, 0.5);
+		////graphics.drawRect(x-0.5 ,y-0.5 ,5,5);
+		////graphics.endFill();
+	////}
+//}
 
-world.addChild(graphics)
+//world.addChild(graphics)
 
 for (var i = 0; i < 1; i++)
 {
@@ -182,7 +182,7 @@ function keyturn() {
 
 	
 function Boat(xinit,yinit,color,team) {
-
+	this.color = color
 	this.x=xinit;
 	this.y=yinit;
 	this.kills = 0;
@@ -273,6 +273,12 @@ function Boat(xinit,yinit,color,team) {
 	
 	this.draw=function(){
 		this.graphics.moveTo(this.x,this.y)
+		this.graphics.clear()
+		this.graphics.lineStyle(0)
+		this.graphics.beginFill(this.color)
+		this.graphics.drawCircle(this.x,this.y,this.mass)
+		this.graphics.endFill()
+		
 	}
 
 	this.oneStep=function(){
