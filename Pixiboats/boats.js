@@ -1,6 +1,9 @@
+var texture = PIXI.Texture.fromImage('gray-circle.png');
+var btexture = PIXI.Texture.fromImage('dot_blue.png');
+var rtexture = PIXI.Texture.fromImage('red_dot.png');
+
 
 function Boat(xinit,yinit,color,team) {
-	var texture = PIXI.Texture.fromImage('gray-circle.png');
 	this.color = color
 	this.x=xinit;
 	this.y=yinit;
@@ -20,7 +23,11 @@ function Boat(xinit,yinit,color,team) {
 	this.rgb = color || [myrandint(250),myrandint(250),myrandint(250)]
 	this.team = team || 1
 	this.target = null
-	this.graphics = new PIXI.Sprite(texture);
+	if (team == 1){
+			this.graphics = new PIXI.Sprite(btexture);
+	} else {
+			this.graphics = new PIXI.Sprite(rtexture);		
+	}
 	this.graphics.position.x = this.x
 	this.graphics.position.y = this.y
 	world.addChild(this.graphics)
@@ -32,8 +39,10 @@ function Boat(xinit,yinit,color,team) {
 	
 	this.updateTargetPos=function(){
 		if (this.target != null){
-		this.setdest(this.target.x,this.target.y)
-	}
+			this.setdest(this.target.x,this.target.y)
+		} else {
+			this.setdest(0,0)
+		}
 	}
 	
 	this.setTarget=function(tar){
@@ -112,11 +121,12 @@ function Boat(xinit,yinit,color,team) {
 					this.target.health -= this.damage
 					console.log("firing")
 					if (this.target.health <= 0){
-						this.target = null
+						this.target.graphics.texture = texture
 						this.kills += 1
 						console.log("kill:" + this.kills)
 					}
 				}
+				
 			}
 		}
 	}
@@ -157,15 +167,15 @@ function twoTeams(){
 	var blues = []
 	//create redboats
 	for (var i = 0; i < redboats; i++) { 
-		reds[i] = new Boat(100,myrandint(600), 0xFF0000,1);
+		reds[i] = new Boat(myrandint(600),100, 0xFF0000,1);
 	}
 	//create blueboats
 	for (var i = 0; i < blueboats; i++) { 
-		blues[i] = new Boat(800,myrandint(600),0x0000FF,2);
+		blues[i] = new Boat(myrandint(600),800,0x0000FF,2);
 	}
 	//set initial targets
 	for (var i = 0; i < blues.length; i++) {
-			closestTarget(reds,blues[i])
+		closestTarget(reds,blues[i])
 	} 
 	for (var i = 0; i < reds.length; i++) {
 		closestTarget(blues,reds[i])
@@ -173,12 +183,14 @@ function twoTeams(){
 	var count = 0;
 	//move all the boats every 50ms
 	var moveInterval = function(){
-		for (var i = 0; i < blues.length; i++) {	
-			blues[i].oneStepFight()
-		}
+		
 		for (var i = 0; i < reds.length; i++) {	
 			reds[i].oneStepFight()
 		}  
+		for (var i = 0; i < blues.length; i++) {	
+			blues[i].oneStepFight()
+		}
+		
 		
 		for (var i = 0; i < blues.length; i++) {	
 			if (blues[i].health <= 0){
@@ -186,31 +198,40 @@ function twoTeams(){
 				blues.splice(i,1)
 			}
 		}
+		console.log(blues.length,reds.length)
 		for (var i = 0; i < reds.length; i++) {	
 			if (reds[i].health <= 0){
 				//reds[i].graphics.destroy()
 				reds.splice(i,1)
 			}
 		}
+		
+		for (var i = 0; i < blues.length; i++) {
+				closestTarget(reds,blues[i])
+		} 
+		for (var i = 0; i < reds.length; i++) {
+				closestTarget(blues,reds[i])
+		} 
+		
 		count += 1
 		setTimeout(moveInterval,10);
 	};
 	moveInterval()
 	
-	var searchInterval = function(){
-		for (var i = 0; i < blues.length; i++) {
-			if (blues[i].target == null){
-				closestTarget(reds,blues[i])
-			}
-		} 
-		for (var i = 0; i < reds.length; i++) {
-			if (reds[i].target == null){
-				closestTarget(blues,reds[i])
-			}
-		} 
-		setTimeout(searchInterval,1000)
-	}
-	searchInterval()
+	//var searchInterval = function(){
+		//for (var i = 0; i < blues.length; i++) {
+			//if (blues[i].target == null){
+				//closestTarget(reds,blues[i])
+			//}
+		//} 
+		//for (var i = 0; i < reds.length; i++) {
+			//if (reds[i].target == null){
+				//closestTarget(blues,reds[i])
+			//}
+		//} 
+		//setTimeout(searchInterval,1000)
+	//}
+	//searchInterval()
 } 
 
 
