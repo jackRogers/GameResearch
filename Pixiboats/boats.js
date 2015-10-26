@@ -161,8 +161,8 @@ function closestTarget(targetList,boat){
 }
 
 function twoTeams(){
-	var redboats = 1000
-	var blueboats = 1000
+	var redboats = 100
+	var blueboats = 100
 	var reds = []
 	var blues = []
 	//create redboats
