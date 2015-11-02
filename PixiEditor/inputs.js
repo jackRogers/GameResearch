@@ -1,10 +1,16 @@
+//Load in eventhandlers for mousewheel and keyboard
 
+//look for chrome mousewheel events
 document.addEventListener("mousewheel", mouseWheelHandler, false);
+
+//look for firefox mousewheel events
 document.addEventListener('DOMMouseScroll',mouseWheelHandler,false);
 
+//set minimum and maximum allowable zoom - not currently used
 var SCALE_MIN = 0
 var SCALE_MAX = 10
 
+//when we get a mousewheel event, try to zoom in relative to the position of the mouse.  Needs to be updated to handle firefox mousewheel events too, possibly need a function just for that
 function mouseWheelHandler(e) {
 	console.log(e)
 	// cross-browser wheel delta
@@ -19,6 +25,7 @@ function mouseWheelHandler(e) {
 	world.scale.y = newScale.y;
 	}
 
+//this function lets us easily associate a keyboard event with a function or code
 function keyboard(keyCode) {
   var key = {};
   key.code = keyCode;
@@ -56,12 +63,14 @@ function keyboard(keyCode) {
   return key;
 }
 
+//using the above function, we map arrow keys and space bars to variables. When pressed, it will execute the contents of our <keyname>.press functions defined below
  var left = keyboard(37),
       up = keyboard(38),
       right = keyboard(39),
       down = keyboard(40);
       space = keyboard(32)
  
+ //move the camera in the direction of the pressed arrow key
   left.press = function() {
 	  world.position.x += 10
   }
@@ -74,11 +83,11 @@ function keyboard(keyCode) {
   down.press = function() {
 	  world.position.y -= 10
   }
+  
+  //if we get lost, we can press space to reinitialize the camera position and scale of the world objects
   space.press = function() {
 	  world.position.x = 100
 	  world.position.y = 100
 	  world.scale = new PIXI.Point(1,1)
-	  
-
 	  }
 	  

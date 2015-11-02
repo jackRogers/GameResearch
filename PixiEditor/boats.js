@@ -1,78 +1,42 @@
-//load our sprites 
 var texture = PIXI.Texture.fromImage('gray-circle.png');
 var btexture = PIXI.Texture.fromImage('dot_blue.png');
 var rtexture = PIXI.Texture.fromImage('red_dot.png');
 
-//create a boat object
+
 function Boat(xinit,yinit,color,team) {
 	this.color = color
 	this.x=xinit;
 	this.y=yinit;
-	
-	//keep track of number of kills the boat has
 	this.kills = 0;
-	
-	//how much damage the boat does
 	this.damage = 10;
-	
-	//range of boat's weapon
 	this.weprange = 50;
-	
-	//max angle the boat can fire its weapons(+/- 5 degrees in front)
 	this.maxfireangle = 5;
-	
-	//boat health
 	this.health = 100
-	
-	//coordinates of target 
 	this.xdest = null;
 	this.ydest = null;
-	
-	//max speed
 	this.speed=20;
-	
-	//thrust
 	this.thrust=3;
 	this.mass=2;
-	
-	//starts facing upwards
 	this.heading=90;
-	
-	//maximum turn rate
 	this.turnrate = 1
-	
-	//rate of updates
 	this.dt=0.01
-	
-	//old color var
 	this.rgb = color || [myrandint(250),myrandint(250),myrandint(250)]
-	
-	//which team the boat is of incase of multiple factions
 	this.team = team || 1
-	
-	//initialize target variable
 	this.target = null
-	
-	//sets sprite based on team
 	if (team == 1){
 			this.graphics = new PIXI.Sprite(btexture);
 	} else {
 			this.graphics = new PIXI.Sprite(rtexture);		
 	}
-	//set position of boat's sprite to its position
 	this.graphics.position.x = this.x
 	this.graphics.position.y = this.y
-	
-	//add boats sprite to world
 	world.addChild(this.graphics)
 		
-	//update position after one frame of movement
 	this.updatePos=function() {
 		this.x = this.x + Math.cos(this.heading * Math.PI/180) * this.speed * this.dt;
 		this.y = this.y - Math.sin(this.heading * Math.PI/180) * this.speed * this.dt;
 	}
 	
-	//update our knowledge of our targets position
 	this.updateTargetPos=function(){
 		if (this.target != null){
 			this.setdest(this.target.x,this.target.y)
@@ -81,24 +45,20 @@ function Boat(xinit,yinit,color,team) {
 		}
 	}
 	
-	//function to set/change the target of our boat
 	this.setTarget=function(tar){
 		this.target = tar
 		this.updateTargetPos()
 	}
 	
-	//get distance from boat to target
 	this.distToTarget=function(){
 		return Math.sqrt(Math.pow(this.x - this.xdest,2)+ Math.pow(this.y - this.ydest,2))
 	}
 	
-	//set destination of boat
 	this.setdest=function(x,y){
 		this.xdest = x;
 		this.ydest = y;
 	}
 	
-	//turn the boat
 	this.turn=function(ctx) {
 		if (this.xdest == null){ 
 			lol=1;
@@ -130,25 +90,21 @@ function Boat(xinit,yinit,color,team) {
 }
 	
 
-	//slowly lose speed if not thrusting
+	
 	this.updateVel=function() {
 		this.speed = this.speed * .99;
 	}
 	
-	//speed up
 	this.acc=function() {
 		this.speed += this.thrust/this.mass;
 	}
 	
-	//update sprite position
 	this.draw=function(){
 		//this.graphics.moveTo(this.x,this.y)
 		this.graphics.position.x = this.x
 		this.graphics.position.y = this.y
 	}
-	
-	
-	//main function to run every frame
+
 	this.oneStep=function(){
 		this.acc()
 		this.updateVel();
@@ -158,7 +114,6 @@ function Boat(xinit,yinit,color,team) {
 		this.draw();
 	}
 	
-	//fire at target if in range and in field of fire
 	this.fire=function(){
 		if (this.distToTarget() < this.weprange){
 			if (Math.abs(this.bearing - this.heading) < this.maxfireangle){
@@ -176,7 +131,6 @@ function Boat(xinit,yinit,color,team) {
 		}
 	}
 	
-	//main function to run every frame - why do i have two of these? lol
 	this.oneStepFight=function(){
 		this.acc()
 		this.updateVel();
@@ -188,12 +142,11 @@ function Boat(xinit,yinit,color,team) {
 	}
 }
 
-//random int used in lots of stuff for boats
+
 function myrandint(high){
 	return Math.floor((Math.random() * high) + 1)
 }
 
-//get closest enemy to boat - this is bad and i shouldnt do this
 function closestTarget(targetList,boat){
 	closest = null
 	closest_dist = Infinity 
@@ -207,7 +160,6 @@ function closestTarget(targetList,boat){
 	boat.setTarget(closest)
 }
 
-//main function to demo two factions with 100 fighters each duking it out.  really shitty implementation
 function twoTeams(){
 
 	var redboats = 100
