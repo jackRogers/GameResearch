@@ -60,16 +60,16 @@ world
 //may eventually use this as large scale a coordinate grid so we can check for entities in the same square or adjacent squares to save processing time
 var graphics = new PIXI.Graphics();
 
-for (var x = -100000; x < 200000; x+=5000){
-	for (var y = -100000; y < 200000; y +=5000){
+for (var x = -3200; x < 6400; x+=32){
+	for (var y = -3200; y < 6400; y +=32){
 		//no borders or outlines - 0 width
-		graphics.lineStyle(0);
+		graphics.lineStyle(5);
 		
 		//set color and opacity
-		graphics.beginFill(0xFFFFFF, 0.5);
+		graphics.beginFill(0xF0F0F0, 0.7);
 		
 		//set position of top-left corner, then width and height
-		graphics.drawRect(x-0.5 ,y-0.5 ,5000,5000);
+		graphics.drawRect(x-16 ,y-16 ,32,32);
 		
 		//finish the rectangle - now ready to define a new one
 		graphics.endFill();

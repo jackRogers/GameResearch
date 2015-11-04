@@ -67,8 +67,9 @@ function keyboard(keyCode) {
  var left = keyboard(37),
       up = keyboard(38),
       right = keyboard(39),
-      down = keyboard(40);
-      space = keyboard(32)
+      down = keyboard(40),
+      space = keyboard(32),
+      shift = keyboard(16)
  
  //move the camera in the direction of the pressed arrow key
   left.press = function() {
