@@ -161,7 +161,15 @@ function Boat(xinit,yinit,color,team) {
 	//fire at target if in range and in field of fire
 	this.fire=function(){
 		if (this.distToTarget() < this.weprange){
-			if (Math.abs(this.bearing - this.heading) < this.maxfireangle){
+			var diff = (this.bearing - this.heading);
+			if (diff > 180) {
+				diff = Math.abs(diff-360);
+			}
+			else if (diff < -180) {
+				diff +=360;
+			}
+			
+			if (diff < this.maxfireangle){
 				if (this.target != null){
 					this.target.health -= this.damage
 					console.log("firing")
