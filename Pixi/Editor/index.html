@@ -1,0 +1,28 @@
+<html>
+
+<head>
+	<title>Pixi Boats</title>
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script src='pixi.js'></script>
+	
+</head>
+
+<body>
+	<!-- Throw a canvas on the screen.  Would like to have the canvas always fit the window -->
+	<canvas id='canvas' width="1600" height="800"></canvas>
+	
+	<!-- Load in eventhandlers for mousewheel and keyboard -->
+	<script src='inputs.js'></script>
+	
+	<!-- Create Stage, throw pannable draggable zoomable map on it -->
+	<script src='piximap.js'></script>
+	
+	<!-- Load information about tiles -->
+	<script src='blocks.js'></script>
+	
+	<!-- Put a ui overlay that doesn't follow the camera movements -->
+	<script src='ui.js'></script>
+
+</body>
+
+</html>
