@@ -1,0 +1,17 @@
+Version 1.0
+Initial release
+
+Version 1.01
+-Added a GridGeneratorHelper script that extends the inspector and allows to generate and clear grids by pressing a button.
+-Added a CustomUnitGenerator script that extends the inspector and allows to snap manually placed units to grid by pressing a button.
+-Added a CustomObstacleGenerator script that extends the inspector and allows to snap manually placed obstacles to grid by pressing a button.
+-Added a IsUnitAttackable method to the Unit class.
+
+-Removed the CustomCellGridGenerator script. It is no longer necessary.
+
+-Modified the CellGridStateUnitSelected to make use of IsUnitAttackable method.
+-Modified the NaiveAiPlayer to make use of IsUnitAttackable method.
+-Modified the Hexagon prefab that can be found in Prefabs/Example1 folder. The previous version was broken.
+-Modified (just a little) the folder structure of the project. The previous structure was confusig to navigate.
+
+-Updated the documentation to reflect changes made in this release.
