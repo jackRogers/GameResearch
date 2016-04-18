@@ -30,10 +30,21 @@ public class TileMap : MonoBehaviour
 
     }
 
-    float CostToEnterTile(int x, int z)
+   public float CostToEnterTile(int sourceX, int sourceZ,int targetX,int targetZ)
     {
-        TileType tt = tileTypes[tiles[x, z]];
-        return tt.movementCost;
+        TileType tt = tileTypes[tiles[sourceX, sourceZ]];
+        float cost = tt.movementCost;
+        if (UnitCanEnterTile(targetX,targetZ) == false)
+        {
+            return Mathf.Infinity;
+        }
+        if (sourceX != targetX && sourceZ != targetZ)
+        {
+            //costmetic fix for diagonals
+            cost += 0.001f;
+        }
+
+        return cost;
     }
 
     void GeneratePathfindingGraph()
@@ -56,11 +67,32 @@ public class TileMap : MonoBehaviour
         {
             for (int z = 0; z < mapSizeZ; z++)
             {
-                
-                if(x > 0)
-                    graph[x, z].neighbors.Add(graph[x-1, z]);
-                if(x < mapSizeX-1)
-                    graph[x, z].neighbors.Add(graph[x+1, z]);
+                //4x connection version
+//                if(x > 0)
+//                    graph[x, z].neighbors.Add(graph[x-1, z]);
+//                if(x < mapSizeX-1)
+//                    graph[x, z].neighbors.Add(graph[x+1, z]);
+//                if(z > 0)
+//                    graph[x, z].neighbors.Add(graph[x, z-1]);
+//                if(z < mapSizeZ-1)
+//                    graph[x, z].neighbors.Add(graph[x, z+1]);
+              //8 way connection version
+                if (x > 0)
+                {
+                    graph[x, z].neighbors.Add(graph[x - 1, z]);
+                    if(z > 0)
+                        graph[x, z].neighbors.Add(graph[x-1, z-1]);
+                    if(z < mapSizeZ-1)
+                        graph[x, z].neighbors.Add(graph[x-1, z+1]);
+                }
+                if (x < mapSizeX - 1)
+                {
+                    graph[x, z].neighbors.Add(graph[x + 1, z]);
+                    if (z > 0)
+                        graph[x, z].neighbors.Add(graph[x+1, z - 1]);
+                    if (z < mapSizeZ - 1)
+                        graph[x, z].neighbors.Add(graph[x+1, z + 1]);
+                }
                 if(z > 0)
                     graph[x, z].neighbors.Add(graph[x, z-1]);
                 if(z < mapSizeZ-1)
@@ -97,6 +129,10 @@ public class TileMap : MonoBehaviour
         tiles[4,2] = 1;
         tiles[3,3] = 1;
         tiles[2,3] = 1;
+        tiles[2,2] = 1;
+        tiles[3,2] = 1;
+        tiles[5,3] = 1;
+        tiles[4,3] = 1;
     }
 
     void GenerateMapVisual()
@@ -121,10 +157,18 @@ public class TileMap : MonoBehaviour
         return new Vector3(x, 0, z);
     }
 
+    public bool UnitCanEnterTile(int x, int z){
+        //
+        return tileTypes[tiles[x, z]].isWalkable;
+    }
+
     public void GeneratePathTo(int x, int z)
     {
         //clear out units path
         selectedUnit.GetComponent<Unit>().currentPath = null;
+                if (UnitCanEnterTile(x, z) == false){
+                    return;
+                }
 
 //        selectedUnit.GetComponent<Unit>().tileX = x;
 //        selectedUnit.GetComponent<Unit>().tileZ = z;
@@ -177,7 +221,7 @@ public class TileMap : MonoBehaviour
             foreach (Node v in u.neighbors)
             {
                 //float alt = dist[u] + u.DistanceTo(v);
-                float alt = dist[u] + CostToEnterTile(v.x,v.z);
+                float alt = dist[u] + CostToEnterTile(v.x,v.z,u.x,u.z);
 
                 if (alt < dist[v])
                 {

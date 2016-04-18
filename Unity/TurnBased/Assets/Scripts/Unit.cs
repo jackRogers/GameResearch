@@ -10,6 +10,9 @@ public class Unit : MonoBehaviour {
 
     public List<Node> currentPath = null;
 
+
+    int moveSpeed = 3;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -29,4 +32,34 @@ public class Unit : MonoBehaviour {
             }
         }
 	}
+
+    public void MoveNextTile(){
+        float remainingMovement = moveSpeed;
+        while (remainingMovement > 0) {
+            if (currentPath == null)
+            {
+                return;
+            }
+            //figure out movement cost
+            remainingMovement -= map.CostToEnterTile(currentPath[0].x,currentPath[0].z,currentPath[1].x,currentPath[1].z);
+
+            tileX = currentPath[1].x;
+            tileZ = currentPath[1].z;
+
+
+            //now grab new first node and move there
+            transform.position = map.TileCoordToWorldCoord(tileX,tileZ);
+
+            //remove old current tille
+            currentPath.RemoveAt(0);
+
+
+            if (currentPath.Count == 1)
+            {
+                //one tile left - must be dest - lets clear our pathfinding info
+                currentPath = null;
+            }
+
+        }
+    }
 }
