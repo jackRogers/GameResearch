@@ -89,6 +89,10 @@ function teamColorFor(team) {
 	return team === 1 ? 0x1E5BFF : 0xFF3B30;
 }
 
+function defaultHeadingForTeam(team) {
+	return team === 1 ? 90 : 270;
+}
+
 function normalizeAngle(deg) {
 	var normalized = deg % 360;
 	if (normalized < 0) {
@@ -235,8 +239,8 @@ function updateHud(battle) {
 		hudElements.blueCarrier.text = 'Blue carrier HP: ' + Math.max(0, Math.ceil(battle.blueTeam.carrier.health));
 		hudElements.redCarrier.text = 'Red carrier HP: ' + Math.max(0, Math.ceil(battle.redTeam.carrier.health));
 		if (hudElements.blueBombers && hudElements.redBombers) {
-			hudElements.blueBombers.text = 'Blue bombers: ' + battle.blueTeam.bombers.length;
-			hudElements.redBombers.text = 'Red bombers: ' + battle.redTeam.bombers.length;
+			hudElements.blueBombers.text = 'Blue bombers: ' + (battle.blueTeam.bombers ? battle.blueTeam.bombers.length : 0);
+			hudElements.redBombers.text = 'Red bombers: ' + (battle.redTeam.bombers ? battle.redTeam.bombers.length : 0);
 		}
 	}
 }
@@ -367,14 +371,14 @@ function Fighter(xinit, yinit, team, onDestroyed) {
 	this.speed = 20;
 	this.thrust = 3;
 	this.mass = 2;
-	this.heading = 90;
+	this.heading = defaultHeadingForTeam(team);
 	this.turnrate = 1;
 	this.dt = 0.01;
 
 	this.target = null;
 	this.xdest = null;
 	this.ydest = null;
-	this.bearing = 90;
+	this.bearing = this.heading;
 	this.isDestroyed = false;
 	this.smokeCooldown = 0;
 
@@ -542,7 +546,7 @@ function Bomber(xinit, yinit, team, onDestroyed) {
 	this.speed = 10;
 	this.thrust = 1.4;
 	this.mass = 2;
-	this.heading = 90;
+	this.heading = defaultHeadingForTeam(team);
 	this.turnrate = 0.8;
 	this.dt = 0.01;
 
@@ -550,7 +554,7 @@ function Bomber(xinit, yinit, team, onDestroyed) {
 	this.turretTarget = null;
 	this.xdest = null;
 	this.ydest = null;
-	this.bearing = 90;
+	this.bearing = this.heading;
 	this.turretHeading = this.heading;
 	this.isDestroyed = false;
 	this.smokeCooldown = 0;
@@ -752,7 +756,7 @@ function Carrier(x, y, team) {
 	this.x = x;
 	this.y = y;
 	this.team = team;
-	this.health = 1200;
+	this.health = 12000;
 	this.isDestroyed = false;
 	this.turretHeading = team === 1 ? 90 : 270;
 	this.turretTurnRate = 0.35;
@@ -780,7 +784,7 @@ function Carrier(x, y, team) {
 
 	this.graphics.position.set(x, y);
 	this.graphics.rotation = team === 1 ? -Math.PI / 2 : Math.PI / 2;
-	this.hullHeading = team === 1 ? 90 : 270;
+	this.hullHeading = defaultHeadingForTeam(team);
 
 	world.addChild(this.graphics);
 }
@@ -863,6 +867,18 @@ function removeFighterFromTeam(teamObj, fighter) {
 	}
 }
 
+function removeBomberFromTeam(teamObj, bomber) {
+	if (!teamObj.bombers) {
+		return;
+	}
+	for (var i = teamObj.bombers.length - 1; i >= 0; i--) {
+		if (teamObj.bombers[i] === bomber) {
+			teamObj.bombers.splice(i, 1);
+			return;
+		}
+	}
+}
+
 function processReplacementQueue(battleId, teamObj) {
 	if (teamObj.replacementTimerActive) {
 		return;
@@ -917,6 +933,19 @@ function makeFighterForTeam(battleId, teamObj, x, y) {
 	return fighter;
 }
 
+function makeBomberForTeam(battleId, teamObj, x, y) {
+	if (!teamObj.bombers) {
+		teamObj.bombers = [];
+	}
+
+	var bomber = new Bomber(x, y, teamObj.id, function (destroyedBomber) {
+		removeBomberFromTeam(teamObj, destroyedBomber);
+	});
+
+	teamObj.bombers.push(bomber);
+	return bomber;
+}
+
 function launchFighterFromCarrier(battleId, teamObj) {
 	if (!activeBattle || activeBattle.id !== battleId) {
 		return;
@@ -932,6 +961,26 @@ function launchFighterFromCarrier(battleId, teamObj) {
 	var spreadY = Math.floor(Math.random() * 20) - 10;
 	var spawnY = teamObj.id === 1 ? teamObj.carrier.y - 26 : teamObj.carrier.y + 26;
 	makeFighterForTeam(battleId, teamObj, teamObj.carrier.x + spreadX, spawnY + spreadY);
+}
+
+function launchBomberFromCarrier(battleId, teamObj) {
+	if (!activeBattle || activeBattle.id !== battleId) {
+		return;
+	}
+	if (!teamObj.carrier || teamObj.carrier.isDestroyed) {
+		return;
+	}
+	if (!teamObj.bombers) {
+		teamObj.bombers = [];
+	}
+	if (teamObj.bombers.length >= teamObj.bomberCap) {
+		return;
+	}
+
+	var spreadX = Math.floor(Math.random() * 36) - 18;
+	var spreadY = Math.floor(Math.random() * 24) - 12;
+	var spawnY = teamObj.id === 1 ? teamObj.carrier.y - 34 : teamObj.carrier.y + 34;
+	makeBomberForTeam(battleId, teamObj, teamObj.carrier.x + spreadX, spawnY + spreadY);
 }
 
 function nearestEntity(sourceEntity, entityList) {
@@ -961,11 +1010,57 @@ function assignTargetsForBattle(battle) {
 	for (var j = 0; j < battle.redTeam.fighters.length; j++) {
 		assignTargetToFighter(battle, battle.redTeam.fighters[j], battle.blueTeam);
 	}
+
+	if (battle.mode === 'carriers') {
+		for (var b = 0; b < battle.blueTeam.bombers.length; b++) {
+			assignTargetsToBomber(battle.blueTeam.bombers[b], battle.redTeam);
+		}
+		for (var r = 0; r < battle.redTeam.bombers.length; r++) {
+			assignTargetsToBomber(battle.redTeam.bombers[r], battle.blueTeam);
+		}
+
+		assignCarrierTurretTarget(battle.blueTeam.carrier, battle.redTeam.fighters);
+		assignCarrierTurretTarget(battle.redTeam.carrier, battle.blueTeam.fighters);
+	}
+}
+
+function assignTargetsToBomber(bomber, enemyTeam) {
+	if (bomber.isDestroyed) {
+		bomber.setTarget(null);
+		bomber.setTurretTarget(null);
+		return;
+	}
+
+	if (enemyTeam.carrier && !enemyTeam.carrier.isDestroyed) {
+		bomber.setTarget(enemyTeam.carrier);
+	} else {
+		bomber.setTarget(null);
+	}
+
+	var turretTarget = nearestEntity(bomber, enemyTeam.fighters);
+	bomber.setTurretTarget(turretTarget);
+}
+
+function assignCarrierTurretTarget(carrier, enemyFighters) {
+	if (!carrier || carrier.isDestroyed) {
+		return;
+	}
+	carrier.setTurretTarget(nearestEntity(carrier, enemyFighters));
 }
 
 function assignTargetToFighter(battle, fighter, enemyTeam) {
 	if (fighter.isDestroyed) {
 		fighter.setTarget(null);
+		return;
+	}
+
+	var priorityTarget = null;
+	if (battle.mode === 'carriers' && enemyTeam.bombers && enemyTeam.bombers.length > 0) {
+		priorityTarget = nearestEntity(fighter, enemyTeam.bombers);
+	}
+
+	if (priorityTarget) {
+		fighter.setTarget(priorityTarget);
 		return;
 	}
 
@@ -995,6 +1090,20 @@ function runBattleLoop(battleId) {
 	}
 	for (var j = 0; j < battle.redTeam.fighters.length; j++) {
 		battle.redTeam.fighters[j].oneStepFight();
+	}
+
+	if (battle.mode === 'carriers') {
+		for (var b = 0; b < battle.blueTeam.bombers.length; b++) {
+			battle.blueTeam.bombers[b].oneStepFight();
+		}
+		for (var r = 0; r < battle.redTeam.bombers.length; r++) {
+			battle.redTeam.bombers[r].oneStepFight();
+		}
+
+		battle.blueTeam.carrier.updateTurret();
+		battle.redTeam.carrier.updateTurret();
+		battle.blueTeam.carrier.fireTurret();
+		battle.redTeam.carrier.fireTurret();
 	}
 
 	assignTargetsForBattle(battle);
@@ -1090,11 +1199,13 @@ function startCarriersBattle() {
 	menuRoot.style.display = 'none';
 
 	var battleId = ++battleIdCounter;
-	var blueTeam = { id: 1, name: 'Blue', fighters: [], carrier: null, fighterCap: 10, replacementQueue: 0, replacementTimerActive: false };
-	var redTeam = { id: 2, name: 'Red', fighters: [], carrier: null, fighterCap: 10, replacementQueue: 0, replacementTimerActive: false };
+	var blueTeam = { id: 1, name: 'Blue', fighters: [], bombers: [], carrier: null, fighterCap: 10, bomberCap: 2, replacementQueue: 0, replacementTimerActive: false };
+	var redTeam = { id: 2, name: 'Red', fighters: [], bombers: [], carrier: null, fighterCap: 10, bomberCap: 2, replacementQueue: 0, replacementTimerActive: false };
 
-	blueTeam.carrier = new Carrier(400, 590, 1);
-	redTeam.carrier = new Carrier(400, 110, 2);
+	var carrierCenterY = 350;
+	var carrierHalfGap = 720;
+	blueTeam.carrier = new Carrier(400, carrierCenterY + carrierHalfGap, 1);
+	redTeam.carrier = new Carrier(400, carrierCenterY - carrierHalfGap, 2);
 
 	activeBattle = {
 		id: battleId,
@@ -1113,6 +1224,15 @@ function startCarriersBattle() {
 				launchFighterFromCarrier(battleId, redTeam);
 			}, launchIndex * 1000);
 		}(i));
+	}
+
+	for (var b = 0; b < 2; b++) {
+		(function (bomberIndex) {
+			scheduleTimeout(function () {
+				launchBomberFromCarrier(battleId, blueTeam);
+				launchBomberFromCarrier(battleId, redTeam);
+			}, 1500 + bomberIndex * 2500);
+		}(b));
 	}
 
 	createHud('Carriers', true);

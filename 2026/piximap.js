@@ -1,12 +1,20 @@
 
 var canvas = document.getElementById('canvas');
-var renderer = PIXI.autoDetectRenderer(document.body.clientWidth-25, document.body.clientHeight-25, {view:canvas});
+var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, {view:canvas});
 document.body.appendChild(renderer.view);
 
 var stage = new PIXI.Container();
 
-stage.width = document.body.clientWidth;
-stage.height = document.body.clientHeight;
+stage.width = window.innerWidth;
+stage.height = window.innerHeight;
+
+function resizeRenderer() {
+	renderer.resize(window.innerWidth, window.innerHeight);
+	stage.width = window.innerWidth;
+	stage.height = window.innerHeight;
+}
+
+window.addEventListener('resize', resizeRenderer);
 
 
 
